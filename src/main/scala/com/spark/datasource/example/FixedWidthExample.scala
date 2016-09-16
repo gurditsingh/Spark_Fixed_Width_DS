@@ -1,21 +1,29 @@
 package com.spark.datasource.example
 
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.IntegerType
+
 /**
  * Created by GURDIT_SINGH on 15-09-2016.
  */
 object FixedWidthExample {
 
   def main(args: Array[String]) {
-//    val
-// sc = new SparkContext(args(0), "Csv loading example")
-//    val sqlContext = new SQLContext(sc)
-//    val fieldLength=Array(2,3)
-//    val df = sqlContext.load("com.madhukaraphatak.spark.datasource.csv", Map("path" -> args(1), "header" -> "true"))
-//    println(df.count())
-//    println(df.collectAsList())
+    val sparkSession = SparkSession.builder.
+      master("local")
+      .appName("example")
+      .config("spark.sql.warehouse.dir", "file:///c:/tmp/spark-warehouse")
+      .getOrCreate()
+    val df = sparkSession.read
+      .format("com.spark.datasource.fixedwidth")
+      .option("length", "1,2,2")
+      .schema(StructType(List(StructField("a", IntegerType, nullable = true), StructField("b", IntegerType, nullable = true), StructField("c", StringType, nullable = true))))
+      .load("C:\\Java Workspace\\SparkTesting\\input")
 
-    val value="abcdef"
-    println(value.substring(0,2))
+    println(df.collectAsList())
   }
 
 }

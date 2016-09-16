@@ -1,5 +1,6 @@
 apply plugin: 'scala'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 sourceCompatibility = 1.7
 version = '1.0'
