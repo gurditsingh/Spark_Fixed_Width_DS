@@ -1,13 +1,10 @@
 package com.spark.datasource.example
 
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StringType
-import org.apache.spark.sql.types.IntegerType
+import org.apache.spark.sql.{SaveMode, SparkSession}
+import org.apache.spark.sql.types.{StructType, IntegerType, StructField, StringType}
 
 /**
- * Created by GURDIT_SINGH on 15-09-2016.
+ * Created by GURDIT_SINGH
  */
 object FixedWidthExample {
 
@@ -17,13 +14,13 @@ object FixedWidthExample {
       .appName("example")
       .config("spark.sql.warehouse.dir", "file:///c:/tmp/spark-warehouse")
       .getOrCreate()
-    val df = sparkSession.read
-      .format("com.spark.datasource.fixedwidth")
-      .option("length", "1,2,2")
-      .schema(StructType(List(StructField("a", IntegerType, nullable = true), StructField("b", IntegerType, nullable = true), StructField("c", StringType, nullable = true))))
-      .load("C:\\Java Workspace\\SparkTesting\\input")
 
-    println(df.collectAsList())
+    val df = sparkSession.read
+      .schema(StructType(List(StructField("a", IntegerType, nullable = true), StructField("b", StringType, nullable = true), StructField("c", StringType, nullable = true))))
+      .csv(args(0))
+
+    df.write.format(args(1)).option("length", "3,2,2").mode(SaveMode.Overwrite).save(args(2))
+
   }
 
 }
